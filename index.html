@@ -1,1 +1,95 @@
-<!-- Updated HTML with UOM dropdown, export, password change, small layout -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Store Management System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="loginScreen" class="container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <select id="userRole" required>
+        <option value="admin">Admin</option>
+        <option value="cashier">Cashier</option>
+      </select>
+      <input type="password" id="userPassword" placeholder="Enter Password" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <div id="appScreen" style="display:none;">
+    <header>
+      <div class="container">
+        <h1>Store Management System</h1>
+        <nav id="navButtons"></nav><button id="logoutBtn" style="float:right;">Logout</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="inventory" class="section">
+        <h2>Inventory</h2>
+        <input type="text" id="searchBox" placeholder="Search Product..." />
+        <table id="inventoryTable">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price (₹)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section id="addProduct" class="section" style="display:none;">
+        <h2>Add / Edit Product</h2>
+        <form id="productForm">
+          <input type="hidden" id="editIndex" />
+          <input type="text" id="productName" placeholder="Product Name" required />
+          <input type="number" id="productQty" placeholder="Quantity" required />
+          <input type="text" id="productUOM" placeholder="Unit of Measure (e.g. kg, pcs)" required />
+<input type="number" id="productPrice" placeholder="Price (₹)" required />
+          <button type="submit">Save Product</button>
+        </form>
+      </section>
+
+      <section id="saleProduct" class="section" style="display:none;">
+        <h2>Sell Product</h2>
+        <form id="saleForm">
+          <select id="saleProductSelect" required></select>
+          <input type="number" id="saleQty" placeholder="Quantity to Sell" required />
+          <button type="submit">Sell</button>
+        </form>
+        <p id="saleMessage"></p>
+      </section>
+
+      <section id="salesReport" class="section" style="display:none;">
+        <h2>Sales Report</h2>
+        <input type="date" id="reportDate" />
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty Sold</th>
+              <th>Total (₹)</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="reportTable"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Store Management System</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
