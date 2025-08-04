@@ -93,3 +93,15 @@ button.delete {
   padding: 10px;
   margin: 10px 0;
 }
+
+#loginScreen {
+  margin-top: 100px;
+  text-align: center;
+}
+#loginScreen input {
+  padding: 10px;
+  width: 250px;
+}
+#chartSection {
+  margin-top: 40px;
+}

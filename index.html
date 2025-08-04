@@ -3,57 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Store Management System - Advanced</title>
+  <title>Store Management System - Pro</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1>Store Management System</h1>
-      <nav>
-        <a href="#inventory">Inventory</a>
-        <a href="#addProduct">Add Product</a>
-      </nav>
-    </div>
-  </header>
+  <div id="loginScreen" class="container">
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+      <input type="password" id="adminPassword" placeholder="Enter Admin Password" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
 
-  <main class="container">
-    <section id="addProduct">
-      <h2>Add / Edit Product</h2>
-      <form id="productForm">
-        <input type="hidden" id="editIndex" />
-        <input type="text" id="productName" placeholder="Product Name" required />
-        <input type="number" id="productQty" placeholder="Quantity" required />
-        <input type="number" id="productPrice" placeholder="Price (₹)" required />
-        <button type="submit">Save Product</button>
-      </form>
-    </section>
+  <div id="appScreen" style="display:none;">
+    <header>
+      <div class="container">
+        <h1>Store Management System</h1>
+        <nav>
+          <a href="#inventory">Inventory</a>
+          <a href="#addProduct">Add Product</a>
+        </nav>
+      </div>
+    </header>
 
-    <section id="inventory">
-      <h2>Inventory</h2>
-      <input type="text" id="searchBox" placeholder="Search Product..." />
-      <table id="inventoryTable">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Price (₹)</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Inventory rows go here -->
-        </tbody>
-      </table>
-    </section>
-  </main>
+    <main class="container">
+      <section id="addProduct">
+        <h2>Add / Edit Product</h2>
+        <form id="productForm">
+          <input type="hidden" id="editIndex" />
+          <input type="text" id="productName" placeholder="Product Name" required />
+          <input type="number" id="productQty" placeholder="Quantity" required />
+          <input type="number" id="productPrice" placeholder="Price (₹)" required />
+          <select id="productCategory" required>
+            <option value="">Select Category</option>
+            <option value="Grocery">Grocery</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Clothing">Clothing</option>
+          </select>
+          <button type="submit">Save Product</button>
+        </form>
+      </section>
 
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 Store Management System</p>
-    </div>
-  </footer>
+      <section id="inventory">
+        <h2>Inventory</h2>
+        <input type="text" id="searchBox" placeholder="Search Product..." />
+        <table id="inventoryTable">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price (₹)</th>
+              <th>Category</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Inventory rows go here -->
+          </tbody>
+        </table>
+      </section>
 
+      <section id="chartSection">
+        <h2>Inventory Overview</h2>
+        <canvas id="inventoryChart" width="400" height="200"></canvas>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Store Management System</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
