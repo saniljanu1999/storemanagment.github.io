@@ -1,23 +1,67 @@
-document.getElementById('productForm').addEventListener('submit', function(e) {
-  e.preventDefault();
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
-  const name = document.getElementById('productName').value;
-  const qty = document.getElementById('productQty').value;
-  const price = document.getElementById('productPrice').value;
+function saveToStorage() {
+  localStorage.setItem("products", JSON.stringify(products));
+}
 
-  if (name && qty && price) {
-    const table = document.getElementById('inventoryTable').getElementsByTagName('tbody')[0];
-    const newRow = table.insertRow();
+function renderTable(filter = "") {
+  const tbody = document.querySelector("#inventoryTable tbody");
+  tbody.innerHTML = "";
+  products.forEach((p, i) => {
+    if (!p.name.toLowerCase().includes(filter.toLowerCase())) return;
+    const row = document.createElement("tr");
 
-    const nameCell = newRow.insertCell(0);
-    const qtyCell = newRow.insertCell(1);
-    const priceCell = newRow.insertCell(2);
+    row.innerHTML = `
+      <td>${p.name}</td>
+      <td>${p.qty}</td>
+      <td>₹${p.price}</td>
+      <td>
+        <button class="edit" onclick="editProduct(${i})">Edit</button>
+        <button class="delete" onclick="deleteProduct(${i})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
 
-    nameCell.textContent = name;
-    qtyCell.textContent = qty;
-    priceCell.textContent = '₹' + price;
+function editProduct(index) {
+  const p = products[index];
+  document.getElementById("productName").value = p.name;
+  document.getElementById("productQty").value = p.qty;
+  document.getElementById("productPrice").value = p.price;
+  document.getElementById("editIndex").value = index;
+}
 
-    // Clear form
-    document.getElementById('productForm').reset();
+function deleteProduct(index) {
+  if (confirm("Are you sure you want to delete this product?")) {
+    products.splice(index, 1);
+    saveToStorage();
+    renderTable(document.getElementById("searchBox").value);
   }
+}
+
+document.getElementById("productForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const name = document.getElementById("productName").value;
+  const qty = parseInt(document.getElementById("productQty").value);
+  const price = parseFloat(document.getElementById("productPrice").value);
+  const editIndex = document.getElementById("editIndex").value;
+
+  if (editIndex === "") {
+    products.push({ name, qty, price });
+  } else {
+    products[editIndex] = { name, qty, price };
+    document.getElementById("editIndex").value = "";
+  }
+
+  saveToStorage();
+  renderTable(document.getElementById("searchBox").value);
+  document.getElementById("productForm").reset();
 });
+
+document.getElementById("searchBox").addEventListener("input", function(e) {
+  renderTable(e.target.value);
+});
+
+// Initial render
+renderTable();

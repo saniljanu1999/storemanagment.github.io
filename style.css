@@ -70,3 +70,26 @@ footer {
   padding: 15px 0;
   margin-top: 30px;
 }
+
+button.edit, button.delete {
+  padding: 5px 10px;
+  margin: 2px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+button.edit {
+  background-color: #ffc107;
+  color: black;
+  border: none;
+}
+button.delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+#searchBox {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
