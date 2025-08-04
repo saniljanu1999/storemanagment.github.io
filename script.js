@@ -2,6 +2,13 @@ let products = JSON.parse(localStorage.getItem("products")) || [];
 let sales = JSON.parse(localStorage.getItem("sales")) || [];
 let currentUserRole = null;
 
+const loginForm = document.getElementById("loginForm");
+const productForm = document.getElementById("productForm");
+const saleForm = document.getElementById("saleForm");
+const searchBox = document.getElementById("searchBox");
+const reportDate = document.getElementById("reportDate");
+const logoutBtn = document.getElementById("logoutBtn");
+
 function saveData() {
   localStorage.setItem("products", JSON.stringify(products));
   localStorage.setItem("sales", JSON.stringify(sales));
@@ -17,17 +24,18 @@ function showSection(id) {
 function renderTable(filter = "") {
   const tbody = document.querySelector("#inventoryTable tbody");
   tbody.innerHTML = "";
-  products.forEach((p, i) => {
-    if (p.qty <= 0 || !p.name.toLowerCase().includes(filter.toLowerCase())) return;
+  const filteredProducts = products.filter(p => p.qty > 0 && p.name.toLowerCase().includes(filter.toLowerCase()));
+  
+  filteredProducts.forEach((p, i) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${p.name} (${p.uom || ""})</td>
       <td>${p.qty}</td>
-      <td>₹${p.price}</td>
+      <td>₹${p.price.toFixed(2)}</td>
       <td>
         ${currentUserRole === 'admin' ? `
-        <button class="edit" onclick="editProduct(${i})">Edit</button>
-        <button class="delete" onclick="deleteProduct(${i})">Delete</button>` : ''}
+        <button class="button-secondary edit-btn" data-index="${products.indexOf(p)}">Edit</button>
+        <button class="button-danger delete-btn" data-index="${products.indexOf(p)}">Delete</button>` : ''}
       </td>
     `;
     tbody.appendChild(row);
@@ -48,51 +56,70 @@ function renderSaleOptions() {
   });
 }
 
-function editProduct(index) {
-  const p = products[index];
-  document.getElementById("productName").value = p.name;
-  document.getElementById("productQty").value = p.qty;
-  document.getElementById("productPrice").value = p.price;
-  document.getElementById("editIndex").value = index;
-  showSection("addProduct");
+function renderSalesReport() {
+  const tbody = document.getElementById("reportTable");
+  const selectedDate = reportDate.value;
+  tbody.innerHTML = "";
+  
+  const filteredSales = sales.filter(s => !selectedDate || s.date === selectedDate);
+  
+  filteredSales.forEach(s => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${s.name}</td><td>${s.qty}</td><td>₹${s.total.toFixed(2)}</td><td>${s.date}</td>`;
+    tbody.appendChild(row);
+  });
 }
 
-function deleteProduct(index) {
-  if (confirm("Are you sure?")) {
-    products.splice(index, 1);
-    saveData();
-    renderTable(document.getElementById("searchBox").value);
+// Event Listeners
+
+loginForm.addEventListener("submit", function(e) {
+  e.preventDefault();
+  const role = document.getElementById("userRole").value;
+  const pass = document.getElementById("userPassword").value;
+  if ((role === "admin" && pass === "admin123") || (role === "cashier" && pass === "cash123")) {
+    currentUserRole = role;
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("appScreen").style.display = "block";
+    const nav = document.getElementById("navButtons");
+    nav.innerHTML = "";
+    if (role === "admin") {
+      nav.innerHTML += `<button class="button-secondary" onclick="showSection('inventory')">Inventory</button>
+                        <button class="button-secondary" onclick="showSection('addProduct')">Add Product</button>`;
+    }
+    nav.innerHTML += `<button class="button-secondary" onclick="showSection('saleProduct')">Sell Product</button>
+                      <button class="button-secondary" onclick="showSection('salesReport')">Sales Report</button>`;
+    showSection("inventory");
+  } else {
+    alert("Wrong credentials!");
   }
-}
+});
 
-document.getElementById("productForm").addEventListener("submit", function(e) {
+productForm.addEventListener("submit", function(e) {
   e.preventDefault();
   const name = document.getElementById("productName").value.trim();
   const qty = parseInt(document.getElementById("productQty").value);
+  const uom = document.getElementById("productUOM").value.trim();
   const price = parseFloat(document.getElementById("productPrice").value);
   const editIndex = document.getElementById("editIndex").value;
 
   if (editIndex === "") {
-    const uom = document.getElementById("productUOM").value.trim();
     products.push({ name, qty, price, uom });
   } else {
-    const uom = document.getElementById("productUOM").value.trim();
     products[editIndex] = { name, qty, price, uom };
     document.getElementById("editIndex").value = "";
   }
-
   saveData();
   renderTable();
-  document.getElementById("productForm").reset();
-  
+  productForm.reset();
 });
 
-document.getElementById("searchBox").addEventListener("input", function(e) {
+searchBox.addEventListener("input", function(e) {
   renderTable(e.target.value);
 });
 
-document.getElementById("saleForm").addEventListener("submit", function(e) {
+saleForm.addEventListener("submit", function(e) {
   e.preventDefault();
+  const saleMessage = document.getElementById("saleMessage");
   const index = parseInt(document.getElementById("saleProductSelect").value);
   const qtyToSell = parseInt(document.getElementById("saleQty").value);
   const product = products[index];
@@ -104,49 +131,40 @@ document.getElementById("saleForm").addEventListener("submit", function(e) {
     sales.push({ name: product.name, qty: qtyToSell, total, date });
     saveData();
     renderTable();
-    document.getElementById("saleMessage").innerText = `Sold ${qtyToSell} of ${product.name}`;
+    saleMessage.innerText = `Sold ${qtyToSell} of ${product.name} successfully.`;
+    saleMessage.className = "feedback-message success";
   } else {
-    document.getElementById("saleMessage").innerText = "Invalid quantity!";
+    saleMessage.innerText = "Invalid quantity or insufficient stock!";
+    saleMessage.className = "feedback-message error";
   }
-  document.getElementById("saleForm").reset();
+  saleForm.reset();
 });
 
-document.getElementById("reportDate").addEventListener("input", renderSalesReport);
+reportDate.addEventListener("input", renderSalesReport);
 
-function renderSalesReport() {
-  const tbody = document.getElementById("reportTable");
-  const selectedDate = document.getElementById("reportDate").value;
-  tbody.innerHTML = "";
-  sales.filter(s => !selectedDate || s.date === selectedDate).forEach(s => {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${s.name}</td><td>${s.qty}</td><td>₹${s.total}</td><td>${s.date}</td>`;
-    tbody.appendChild(row);
-  });
-}
-
-document.getElementById("loginForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const role = document.getElementById("userRole").value;
-  const pass = document.getElementById("userPassword").value;
-  if ((role === "admin" && pass === "admin123") || (role === "cashier" && pass === "cash123")) {
-    currentUserRole = role;
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("logoutBtn").style.display = "inline";
-    document.getElementById("appScreen").style.display = "block";
-    const nav = document.getElementById("navButtons");
-    nav.innerHTML = "";
-    if (role === "admin") {
-      nav.innerHTML += `<button onclick="showSection('inventory')">Inventory</button>
-                        <button onclick="showSection('addProduct')">Add Product</button>`;
-    }
-    nav.innerHTML += `<button onclick="showSection('saleProduct')">Sell Product</button>
-                      <button onclick="showSection('salesReport')">Sales Report</button>`;
-    
-  } else {
-    alert("Wrong credentials!");
-  }
-});
-
-document.getElementById("logoutBtn").addEventListener("click", function () {
+logoutBtn.addEventListener("click", function () {
   location.reload();
+});
+
+// Event delegation for Edit and Delete buttons on the inventory table
+document.querySelector("#inventoryTable tbody").addEventListener("click", (e) => {
+  if (e.target.classList.contains("edit-btn")) {
+    const index = e.target.dataset.index;
+    const p = products[index];
+    document.getElementById("productName").value = p.name;
+    document.getElementById("productQty").value = p.qty;
+    document.getElementById("productUOM").value = p.uom || "";
+    document.getElementById("productPrice").value = p.price;
+    document.getElementById("editIndex").value = index;
+    showSection("addProduct");
+  }
+  
+  if (e.target.classList.contains("delete-btn")) {
+    const index = e.target.dataset.index;
+    if (confirm(`Are you sure you want to delete ${products[index].name}?`)) {
+      products.splice(index, 1);
+      saveData();
+      renderTable(searchBox.value);
+    }
+  }
 });
