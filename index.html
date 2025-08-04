@@ -3,41 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Business</title>
+  <title>Store Management System</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>Welcome to My Business</h1>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#contact">Contact</a>
-    </nav>
+    <div class="container">
+      <h1>Store Management System</h1>
+      <nav>
+        <a href="#inventory">Inventory</a>
+        <a href="#addProduct">Add Product</a>
+      </nav>
+    </div>
   </header>
 
-  <section id="about">
-    <h2>About Us</h2>
-    <p>We offer the best business solutions for your needs.</p>
-  </section>
+  <main class="container">
+    <section id="addProduct">
+      <h2>Add New Product</h2>
+      <form id="productForm">
+        <input type="text" id="productName" placeholder="Product Name" required />
+        <input type="number" id="productQty" placeholder="Quantity" required />
+        <input type="number" id="productPrice" placeholder="Price (₹)" required />
+        <button type="submit">Add Product</button>
+      </form>
+    </section>
 
-  <section id="services">
-    <h2>Our Services</h2>
-    <ul>
-      <li>Service 1</li>
-      <li>Service 2</li>
-      <li>Service 3</li>
-    </ul>
-  </section>
-
-  <section id="contact">
-    <h2>Contact Us</h2>
-    <p>Email: contact@mybusiness.com</p>
-    <p>Phone: +91 9876543210</p>
-  </section>
+    <section id="inventory">
+      <h2>Inventory</h2>
+      <table id="inventoryTable">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Inventory will populate here -->
+        </tbody>
+      </table>
+    </section>
+  </main>
 
   <footer>
-    <p>&copy; 2025 My Business</p>
+    <div class="container">
+      <p>&copy; 2025 Store Management System</p>
+    </div>
   </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
