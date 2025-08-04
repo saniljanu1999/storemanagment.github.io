@@ -5,81 +5,99 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Store Management System</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="loginScreen" class="container">
-    <h2>Login</h2>
-    <form id="loginForm">
-      <select id="userRole" required>
-        <option value="admin">Admin</option>
-        <option value="cashier">Cashier</option>
-      </select>
-      <input type="password" id="userPassword" placeholder="Enter Password" required />
-      <button type="submit">Login</button>
-    </form>
+  <div id="loginScreen" class="full-screen-container">
+    <div class="card">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <label for="userRole">Select Role</label>
+        <select id="userRole" required>
+          <option value="admin">Admin</option>
+          <option value="cashier">Cashier</option>
+        </select>
+        <label for="userPassword">Password</label>
+        <input type="password" id="userPassword" placeholder="Enter Password" required />
+        <button type="submit" class="button-primary">Login</button>
+      </form>
+    </div>
   </div>
 
   <div id="appScreen" style="display:none;">
     <header>
       <div class="container">
         <h1>Store Management System</h1>
-        <nav id="navButtons"></nav><button id="logoutBtn" style="float:right;">Logout</button>
+        <nav id="navButtons">
+          </nav>
+        <button id="logoutBtn" class="button-secondary logout-btn">Logout</button>
       </div>
     </header>
 
     <main class="container">
-      <section id="inventory" class="section">
+      <section id="inventory" class="card section">
         <h2>Inventory</h2>
         <input type="text" id="searchBox" placeholder="Search Product..." />
-        <table id="inventoryTable">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Quantity</th>
-              <th>Price (₹)</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-responsive">
+          <table id="inventoryTable">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price (₹)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </section>
 
-      <section id="addProduct" class="section" style="display:none;">
+      <section id="addProduct" class="card section" style="display:none;">
         <h2>Add / Edit Product</h2>
         <form id="productForm">
           <input type="hidden" id="editIndex" />
+          <label for="productName">Product Name</label>
           <input type="text" id="productName" placeholder="Product Name" required />
+          <label for="productQty">Quantity</label>
           <input type="number" id="productQty" placeholder="Quantity" required />
-          <input type="text" id="productUOM" placeholder="Unit of Measure (e.g. kg, pcs)" required />
-<input type="number" id="productPrice" placeholder="Price (₹)" required />
-          <button type="submit">Save Product</button>
+          <label for="productUOM">Unit of Measure</label>
+          <input type="text" id="productUOM" placeholder="e.g. kg, pcs" required />
+          <label for="productPrice">Price (₹)</label>
+          <input type="number" id="productPrice" placeholder="Price (₹)" required />
+          <button type="submit" class="button-primary">Save Product</button>
         </form>
       </section>
 
-      <section id="saleProduct" class="section" style="display:none;">
+      <section id="saleProduct" class="card section" style="display:none;">
         <h2>Sell Product</h2>
         <form id="saleForm">
+          <label for="saleProductSelect">Select Product</label>
           <select id="saleProductSelect" required></select>
+          <label for="saleQty">Quantity to Sell</label>
           <input type="number" id="saleQty" placeholder="Quantity to Sell" required />
-          <button type="submit">Sell</button>
+          <button type="submit" class="button-primary">Sell</button>
         </form>
-        <p id="saleMessage"></p>
+        <p id="saleMessage" class="feedback-message"></p>
       </section>
 
-      <section id="salesReport" class="section" style="display:none;">
+      <section id="salesReport" class="card section" style="display:none;">
         <h2>Sales Report</h2>
+        <label for="reportDate">Filter by Date</label>
         <input type="date" id="reportDate" />
-        <table>
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Qty Sold</th>
-              <th>Total (₹)</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody id="reportTable"></tbody>
-        </table>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Qty Sold</th>
+                <th>Total (₹)</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="reportTable"></tbody>
+          </table>
+        </div>
       </section>
     </main>
 
